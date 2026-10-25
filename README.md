@@ -20,6 +20,7 @@ An educational computer-vision project that classifies brain MRI images into fou
 ## Demo
 
 ![NeuroSight live app screenshot](assets/neurosight-demo.png)
+![NeuroSight analysis results screenshot](assets/neurosight-results.png)
 
 Upload an MRI image to view the model's predicted dataset class, the scores across all four classes, and a Grad-CAM visualization. Grad-CAM highlights regions associated with the model output; it is **not** a tumor outline and does not establish medical correctness.
 
@@ -41,34 +42,22 @@ The app resizes each uploaded image to 224 × 224 pixels, normalizes it using Im
 ## Technology stack
 
 - **Python 3.13** — project language
-
 - **PyTorch and Torchvision** — EfficientNet-B0 model, inference, and image preprocessing
-
 - **ImageNet-pretrained EfficientNet-B0** — transfer-learning backbone
-
-- **pytorch-grad-cam (****`grad-cam`****)** — Grad-CAM visualization
-
+- **pytorch-grad-cam (`grad-cam`)** — Grad-CAM visualization
 - **Streamlit** — interactive upload-and-predict web application
-
 - **Pillow and NumPy** — image loading and array processing
-
 - **Matplotlib** — score chart and confusion-matrix visualization
-
 - **scikit-learn** — classification metrics and evaluation report
-
 - **uv** — local Python environment and dependency management
 
 ## Model approach
 
 1. Start from Torchvision's ImageNet-pretrained EfficientNet-B0 weights.
-
-1. Replace the original 1,000-class output layer with a four-class classifier.
-
-1. Train the classification head while keeping the pretrained feature extractor frozen for the initial model.
-
-1. Compare model checkpoints using validation data, not the test set.
-
-1. Generate a Grad-CAM map for the predicted class to show image regions associated with the output.
+2. Replace the original 1,000-class output layer with a four-class classifier.
+3. Train the classification head while keeping the pretrained feature extractor frozen for the initial model.
+4. Compare model checkpoints using validation data, not the test set.
+5. Generate a Grad-CAM map for the predicted class to show image regions associated with the output.
 
 A later partial fine-tuning attempt did not improve validation accuracy, so the app uses the original baseline checkpoint at `models/efficientnet_b0_best.pth`.
 
@@ -77,7 +66,7 @@ A later partial fine-tuning attempt did not improve validation accuracy, so the 
 The project test split contains **1,600 images** (400 per class). The following are dataset-specific results from this project, not estimates of clinical performance.
 
 | Metric | Result |
-| --- | --- |
+| --- | ---: |
 | Validation accuracy | 92.2% |
 | Test accuracy | 84.8% |
 | Macro one-vs-rest ROC-AUC | 0.962 |
@@ -86,7 +75,7 @@ The project test split contains **1,600 images** (400 per class). The following 
 ### Per-class test results
 
 | Class | Precision | Recall | F1-score | Images |
-| --- | --- | --- | --- | --- |
+| --- | ---: | ---: | ---: | ---: |
 | Glioma | 0.93 | 0.66 | 0.77 | 400 |
 | Meningioma | 0.72 | 0.81 | 0.76 | 400 |
 | No tumor | 0.84 | 0.97 | 0.90 | 400 |
@@ -102,7 +91,7 @@ The project uses the [Brain Tumor MRI Dataset on Kaggle](https://www.kaggle.com/
 
 The raw MRI folders are not stored in this repository. To run training or test-set evaluation, download the dataset separately and place it in this structure:
 
-```
+```text
 brain-tumor-detection/
 ├── data/
 │   ├── Training/
@@ -127,7 +116,7 @@ The baseline checkpoint is included in `models/efficientnet_b0_best.pth`, so the
 
 ### Windows PowerShell
 
-```
+```powershell
 git clone https://github.com/jayeshbaviskar345-ai/brain-tumor-detection.git
 cd brain-tumor-detection
 uv venv --python 3.13
@@ -142,7 +131,7 @@ Open the local URL printed by Streamlit in your browser.
 
 Training and evaluation scripts require the dataset folders above and the processed split manifest. The fine-tuning script starts from the included baseline checkpoint.
 
-```
+```powershell
 python .\create_split_manifest.py
 python .\train_efficientnet.py
 python .\evaluate_model.py
@@ -151,7 +140,7 @@ python .\gradcam_demo.py
 
 ## Repository structure
 
-```
+```text
 .
 ├── app/streamlit_app.py                 # Streamlit inference interface
 ├── data/processed/split_manifest.csv    # Image paths, labels, and splits
@@ -172,21 +161,14 @@ python .\gradcam_demo.py
 ## Limitations and responsible use
 
 - This is a learning and portfolio project, not a diagnostic product.
-
 - The model can make incorrect predictions. Its scores are not calibrated probabilities.
-
 - Grad-CAM is a visualization of model influence, not a tumor segmentation mask, clinical explanation, or proof of correctness.
-
 - The dataset is a curated public collection; performance may not generalize to different hospitals, scanners, image protocols, or patient populations.
-
 - The audit found near-duplicate candidates that have not all been manually confirmed. Treat the reported metrics cautiously.
-
 - Do not upload identifiable patient images to the public demo.
 
 ## Acknowledgments
 
 - Dataset: [Masoud Nickparvar, Brain Tumor MRI Dataset](https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset), listed under CC BY 4.0 on Kaggle.
-
 - Pretrained model: [Torchvision EfficientNet-B0](https://docs.pytorch.org/vision/stable/models/generated/torchvision.models.efficientnet_b0.html), with ImageNet-pretrained weights.
-
 - Explainability library: [pytorch-grad-cam](https://github.com/jacobgil/pytorch-grad-cam).
