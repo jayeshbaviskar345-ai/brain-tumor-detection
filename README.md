@@ -18,3 +18,6 @@ Requires Python and the packages listed in `requirements.txt`.
 ```powershell
 python -m pip install -r requirements.txt
 python -m streamlit run .\app\streamlit_app.py
+
+**Live demo:** https://brain-tumor-detection-dhbbpbvhrepegxl7u2ecjt.streamlit.app/
+
