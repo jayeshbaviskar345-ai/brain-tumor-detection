@@ -1,0 +1,23 @@
+# Python environment and cache
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Secrets
+.env
+.streamlit/secrets.toml
+
+# Original MRI images — do not upload the dataset
+data/Training/
+data/Testing/
+
+# Model checkpoints can be large; keep them off GitHub for now
+models/*.pth
+models/*.pt
+
+!models/efficientnet_b0_best.pth
+
+reports/duplicate_candidates*.csv
+reports/misclassified_images.csv
